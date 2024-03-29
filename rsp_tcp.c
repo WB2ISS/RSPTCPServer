@@ -518,6 +518,13 @@ void event_callback(sdrplay_api_EventT eventId, sdrplay_api_TunerSelectT tunerS,
 	case sdrplay_api_RspDuoModeChange:
 		printf("RSPduo mode changed\n");
 		break;
+	case sdrplay_api_DeviceFailure:
+		printf("RSP device failure\n");
+		sdrplay_api_Uninit(chosenDev->dev);
+		sdrplay_api_ReleaseDevice(chosenDev);
+		sdrplay_api_Close();
+		exit(1);
+		break;
 	}
 }
 
@@ -1200,7 +1207,7 @@ static int set_antenna_input(unsigned int antenna)
 
 			current_band = new_band;
 
-			gain_index_to_gain(last_gain_idx, &if_gr, &lnastate);			
+			gain_index_to_gain(last_gain_idx, &if_gr, &lnastate);
 			gain_reduction = if_gr;
 			lna_state = lnastate;
 		}
@@ -1352,9 +1359,9 @@ static int set_gain(unsigned int db)
 	int p;
 	unsigned int index;
 
-	// quantise R820T gains in tenths of dB into indexes 
+	// quantise R820T gains in tenths of dB into indexes
 	p = ((9 + db) / 5);
-	
+
 	// clamp
 	if (p > 100)
 	{
@@ -1364,7 +1371,7 @@ static int set_gain(unsigned int db)
 	{
 		p = 0;
 	}
-	
+
 	index = (unsigned int) (((GAIN_STEPS-1) / 100.0f) * p);
 	return set_gain_by_index(index);
 }
@@ -1791,12 +1798,12 @@ int init_rsp_device(unsigned int sr, unsigned int freq, int enable_bias_t, unsig
 	current_band = frequency_to_band(freq);
 	current_frequency = freq;
 
-	// initialise at minimum gain	
+	// initialise at minimum gain
 	if (!gain_index_to_gain(0, &ifgain, &lnastate)) {
 		gain_reduction = ifgain;
 		lna_state = lnastate;
 	}
-	
+
 	if (sr < 300e3) { bwType = sdrplay_api_BW_0_200; }
 	else if (sr < 600e3) { bwType = sdrplay_api_BW_0_300; }
 	else if (sr < 1536e3) { bwType = sdrplay_api_BW_0_600; }
@@ -1805,7 +1812,7 @@ int init_rsp_device(unsigned int sr, unsigned int freq, int enable_bias_t, unsig
 	else if (sr < 7e6) { bwType = sdrplay_api_BW_6_000; }
 	else if (sr < 8e6) { bwType = sdrplay_api_BW_7_000; }
 	else { bwType = sdrplay_api_BW_8_000; }
-	
+
 	dec = 1;
 	if (sr < 2e6)
 	{
@@ -1890,7 +1897,7 @@ int init_rsp_device(unsigned int sr, unsigned int freq, int enable_bias_t, unsig
 		fprintf(stderr, "failed to start the RSP device, return (%d)\n", r);
 		return -1;
 	}
-	
+
 	if (dec > 1)
 	{
 		chParams->ctrlParams.decimation.enable = 1;
@@ -1904,7 +1911,7 @@ int init_rsp_device(unsigned int sr, unsigned int freq, int enable_bias_t, unsig
 	}
 
 	printf("started rx\n");
-	
+
 	// set bias-T
 	set_bias_t(enable_bias_t);
 
@@ -2263,7 +2270,7 @@ int main(int argc, char **argv)
 			break;
 		}
 
-		// initialise API and start the rx		
+		// initialise API and start the rx
 		r = init_rsp_device(samp_rate, frequency, enable_biastee, notch, enable_refout, antenna);
 		if (r != 0) {
 			printf("failed to initialise RSP device\n");
