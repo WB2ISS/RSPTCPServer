@@ -6,15 +6,15 @@ DMG	=					rsp_tcp-v.1.1.0-macos12.dmg
 
 rsp_tcp:	$(SRCDIR)/rsp_tcp.c
 
-						cmake -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macosx12.0 ..
-						make
+						cmake -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
+						make VERBOSE=1
 						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.dylib ./rsp_tcp
 						mv rsp_tcp rsp_tcp-x86_64
 
 						rm -rf CMakeFiles
 
-						cmake -DCMAKE_C_COMPILER_TARGET=arm64-apple-macosx12.0 ..
-						make
+						cmake -DCMAKE_C_COMPILER_TARGET=arm64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
+						make VERBOSE=1
 						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.dylib ./rsp_tcp
 						mv rsp_tcp rsp_tcp-arm64
 
@@ -28,11 +28,11 @@ dmg:			rsp_tcp
 						# Place Universal Binary Executable in Folder
 						cp $(EXECUTABLE) $(FOLDER)
 						# Codesign Executable
-						codesign -vf --timestamp --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(FOLDER)/$(EXECUTABLE)
+						codesign -vf --timestamp  --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(FOLDER)/$(EXECUTABLE)
 						# Create .dmg from the Folder
 						hdiutil create -fs HFS+ -srcfolder $(FOLDER) -volname $(FOLDER) $(FOLDER).dmg
 						# Codesign .dmg
-						codesign -vf --timestamp --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(DMG)
+						codesign -vf --timestamp  --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(DMG)
 						codesign --verify --verbose $(DMG)
 						# Notarize .dmg
 						xcrun notarytool submit $(DMG) --keychain-profile "SDR" --wait
