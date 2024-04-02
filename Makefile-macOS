@@ -28,11 +28,11 @@ dmg:			rsp_tcp
 						# Place Universal Binary Executable in Folder
 						cp $(EXECUTABLE) $(FOLDER)
 						# Codesign Executable
-						codesign -vf --timestamp  --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(FOLDER)/$(EXECUTABLE)
+						codesign -vf --timestamp  --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" --entitlements $(SRCDIR)/entitlements.plist $(FOLDER)/$(EXECUTABLE)
 						# Create .dmg from the Folder
 						hdiutil create -fs HFS+ -srcfolder $(FOLDER) -volname $(FOLDER) $(FOLDER).dmg
 						# Codesign .dmg
-						codesign -vf --timestamp  --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" $(DMG)
+						codesign -vf --timestamp  --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" --entitlements $(SRCDIR)/entitlements.plist $(DMG)
 						codesign --verify --verbose $(DMG)
 						# Notarize .dmg
 						xcrun notarytool submit $(DMG) --keychain-profile "SDR" --wait
