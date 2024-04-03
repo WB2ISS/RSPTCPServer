@@ -1,21 +1,21 @@
 SRCDIR = ..
 
 EXECUTABLE = 	rsp_tcp
-FOLDER = 			rsp_tcp-v.1.1.0-macos12
-DMG	=					rsp_tcp-v.1.1.0-macos12.dmg
+FOLDER = 			rsp_tcp-v.1.1.0-macos13
+DMG	=					rsp_tcp-v.1.1.0-macos13.dmg
 
 rsp_tcp:	$(SRCDIR)/rsp_tcp.c
 
 						cmake -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
-						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.dylib ./rsp_tcp
+						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
 						mv rsp_tcp rsp_tcp-x86_64
 
 						rm -rf CMakeFiles
 
 						cmake -DCMAKE_C_COMPILER_TARGET=arm64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
-						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.dylib ./rsp_tcp
+						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
 						mv rsp_tcp rsp_tcp-arm64
 
 						lipo -create -output rsp_tcp rsp_tcp-x86_64 rsp_tcp-arm64
