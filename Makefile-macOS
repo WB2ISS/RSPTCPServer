@@ -1,8 +1,21 @@
+####    Makefile-macOS
+###
+###  Requires:
+###            SDRplay API version 3.14 
+###            cmake version 3.29.0 or later (support for APPLE_CLASSIC linker option)
+###
+#
+#	cd <xxxxx>/RSPTCPServer
+# rm -rf build
+# mkdir build
+# cd build
+# make -f ../Makefile-macOS
+
 SRCDIR = ..
 
 EXECUTABLE = 	rsp_tcp
-FOLDER = 			rsp_tcp-v.1.1.0-macos13
-DMG	=					rsp_tcp-v.1.1.0-macos13.dmg
+FOLDER     =  rsp_tcp-v.1.1.0-macos13
+DMG	       =	rsp_tcp-v.1.1.0-macos13.dmg
 
 rsp_tcp:	$(SRCDIR)/rsp_tcp.c
 
