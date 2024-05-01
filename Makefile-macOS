@@ -12,9 +12,14 @@
 # make -f ../Makefile-macOS
 
 SRCDIR = ..
+SOURCE = $(SRCDIR)/rsp_tcp.c
 
-EXECUTABLE = 	rsp_tcp
-FOLDER     =  rsp_tcp-v.1.1.0-macos13
+EXECUTABLE = rsp_tcp
+VERSION    = 1.1.0
+MACOS      = macos13
+PROFILE    = "SDR"
+
+FOLDER      = $(EXECUTABLE)-$(VERSION)-$(MACOS)
 DMG					= $(FOLDER).dmg
 PKG					= $(FOLDER).pkg
 
@@ -23,44 +28,38 @@ INSTALLID		= "Developer ID Installer: Transition Technology Ventures, LLC (6V82P
 
 INSTALL 		= /usr/local/bin
 
-rsp_tcp:	$(SRCDIR)/rsp_tcp.c
+rsp_tcp:	$(SOURCE)
 
 						cmake -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
 						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
-						mv rsp_tcp rsp_tcp-x86_64
+						mv $(EXECUTABLE) $(EXECUTABLE)-x86_64
 
 						rm -rf CMakeFiles
 
 						cmake -DCMAKE_C_COMPILER_TARGET=arm64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
 						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
-						mv rsp_tcp rsp_tcp-arm64
+						mv $(EXECUTABLE) $(EXECUTABLE)-arm64
 
-						lipo -create -output rsp_tcp rsp_tcp-x86_64 rsp_tcp-arm64
-						lipo -archs rsp_tcp
-						otool -L rsp_tcp
+						lipo -create -output $(EXECUTABLE) $(EXECUTABLE)-x86_64 $(EXECUTABLE)-arm64
+						lipo -archs $(EXECUTABLE)
+						otool -L $(EXECUTABLE)
 
-dmg:			rsp_tcp
+dmg:			$(EXECUTABLE)
 
 						mkdir $(FOLDER)
-						# Place Universal Binary Executable in Folder
 						cp $(EXECUTABLE) $(FOLDER)
-						# Codesign Executable
-						codesign -vf --timestamp  --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" --entitlements $(SRCDIR)/entitlements.plist $(FOLDER)/$(EXECUTABLE)
-						# Create .dmg from the Folder
+						codesign -vf --timestamp  --options runtime --sign $(SIGNID) --entitlements $(SRCDIR)/entitlements.plist $(FOLDER)/$(EXECUTABLE)
 						hdiutil create -fs HFS+ -srcfolder $(FOLDER) -volname $(FOLDER) $(FOLDER).dmg
-						# Codesign .dmg
-						codesign -vf --timestamp  --options runtime --sign "Developer ID Application: Transition Technology Ventures, LLC (6V82P5ET42)" --entitlements $(SRCDIR)/entitlements.plist $(DMG)
+						codesign -vf --timestamp  --options runtime --sign $(SIGNID) --entitlements $(SRCDIR)/entitlements.plist $(DMG)
 						codesign --verify --verbose $(DMG)
-						# Notarize .dmg
-						xcrun notarytool submit $(DMG) --keychain-profile "SDR" --wait
+						xcrun notarytool submit $(DMG) --keychain-profile $(PROFILE) --wait
 						spctl -a -t open --context context:primary-signature -v $(DMG)
-						# Staple Ticket to .dmg and Validate
 						xcrun stapler staple  xcrun stapler $(DMG)
 						xcrun stapler validate $(DMG)
 
-pkg:			rsp_tcp
+pkg:			$(EXECUTABLE)
 
 						mkdir $(FOLDER)-pkg
 						cp $(EXECUTABLE)	$(FOLDER)-pkg
@@ -71,7 +70,7 @@ pkg:			rsp_tcp
 								 		--sign $(INSTALLID) \
 								 		$(PKG)
 						pkgutil --check-signature $(PKG)
-						xcrun notarytool submit $(PKG) --keychain-profile "SDR" --wait
+						xcrun notarytool submit $(PKG) --keychain-profile $(PROFILE) --wait
 						xcrun stapler staple $(PKG)
 						xcrun stapler validate $(PKG)
 						spctl --assess --verbose --type install $(PKG)
