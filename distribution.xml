@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <pkg-ref id="rsp_tcp"/>
+    <readme file="rsp_tcp-license.rtf" mime-type="application/rtf"/>
+    <options customize="never" require-scripts="false" hostArchitectures="x86_64,arm64"/>
+    <choices-outline>
+        <line choice="default">
+            <line choice="rsp_tcp"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="rsp_tcp" visible="false">
+        <pkg-ref id="rsp_tcp"/>
+    </choice>
+    <pkg-ref id="rsp_tcp" version="0" onConclusion="none">rsp_tcp-1.1.0-macos13-L.pkg</pkg-ref>
+</installer-gui-script>
