@@ -9,7 +9,7 @@
 # rm -rf build
 # mkdir build
 # cd build
-# make -f ../Makefile-macOS
+# make -f ../Makefile-macOS [rsp_tcp|dmg|pkg|all|clean]
 
 EXECUTABLE 		= rsp_tcp
 VERSION    		= 1.1.0
