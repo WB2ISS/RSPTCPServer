@@ -12,5 +12,5 @@
     <choice id="rsp_tcp" visible="false">
         <pkg-ref id="rsp_tcp"/>
     </choice>
-    <pkg-ref id="rsp_tcp" version="0" onConclusion="none">rsp_tcp-1.1.0-macos13-L.pkg</pkg-ref>
+    <pkg-ref id="rsp_tcp" version="0" onConclusion="none">rsp_tcp-1.1.1-macos13-L.pkg</pkg-ref>
 </installer-gui-script>

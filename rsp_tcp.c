@@ -2078,12 +2078,13 @@ int main(int argc, char **argv)
 
 	// check API version
 	r = sdrplay_api_ApiVersion(&ver);
-	if (ver != SDRPLAY_API_VERSION) {
+	printf("API library version %.2f found\n", ver);
+
+	if (ver < SDRPLAY_API_VERSION) {
 		//  Error detected, include file does not match dll. Deal with error condition.
-		fprintf(stderr, "API library must be version %.2f\n", ver);
+		fprintf(stderr, "API library version %.2f or higher required\n", SDRPLAY_API_VERSION);
 		exit(1);
 	}
-	printf("API library version %.2f found\n", ver);
 
 	// enable debug output
 	if (verbose) {

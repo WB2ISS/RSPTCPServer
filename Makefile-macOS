@@ -12,7 +12,7 @@
 # make -f ../Makefile-macOS [rsp_tcp|dmg|pkg|all|clean]
 
 EXECUTABLE 		= rsp_tcp
-VERSION    		= 1.1.0
+VERSION    		= 1.1.1
 MACOS      		= macos13
 PROFILE    		= "SDR"
 
@@ -35,14 +35,14 @@ rsp_tcp:	$(SOURCE)
 
 						cmake -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
-						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
+						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3 ./rsp_tcp
 						mv $(EXECUTABLE) $(EXECUTABLE)-x86_64
 
 						rm -rf CMakeFiles
 
 						cmake -DCMAKE_C_COMPILER_TARGET=arm64-apple-macosx13.0 -DCMAKE_LINKER_TYPE=APPLE_CLASSIC ..
 						make VERBOSE=1
-						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3.14 ./rsp_tcp
+						install_name_tool -change libsdrplay_api.so.3.14 /usr/local/lib/libsdrplay_api.so.3 ./rsp_tcp
 						mv $(EXECUTABLE) $(EXECUTABLE)-arm64
 
 						lipo -create -output $(EXECUTABLE) $(EXECUTABLE)-x86_64 $(EXECUTABLE)-arm64
