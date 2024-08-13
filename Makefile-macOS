@@ -67,7 +67,7 @@ pkg:			$(EXECUTABLE)
 
 						mkdir $(FOLDER)-pkg
 						cp $(EXECUTABLE)	$(FOLDER)-pkg
-						codesign -vf --timestamp --options runtime --sign $(SIGNID) $(FOLDER)-pkg/$(EXECUTABLE)
+						codesign -vf --timestamp --options runtime --sign $(SIGNID) --entitlements $(SRCDIR)/entitlements.plist $(FOLDER)-pkg/$(EXECUTABLE)
 						pkgbuild --root ./$(FOLDER)-pkg \
 								 		--identifier $(EXECUTABLE) \
 								 		--install-location $(INSTALL) \
