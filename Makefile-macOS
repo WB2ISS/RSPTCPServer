@@ -2,7 +2,7 @@
 ###
 ###  Requires:
 ###            SDRplay API version 3.15
-###            cmake version 3.29.0 or later 
+###            cmake version 3.29.0 or later
 ###
 #
 #	cd <xxxxx>/RSPTCPServer
@@ -12,7 +12,7 @@
 # make -f ../Makefile-macOS [rsp_tcp|dmg|pkg|all|clean]
 
 EXECUTABLE 		= rsp_tcp
-VERSION    		= 1.1.1
+VERSION    		= 1.1.2
 MACOS      		= macos13
 PROFILE    		= "SDR"
 
